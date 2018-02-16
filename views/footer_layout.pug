@@ -1,0 +1,109 @@
+doctype html
+html
+  head
+    title= "星島日報"
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+
+    script(src="https://use.fontawesome.com/db9cb83054.js")
+
+    link(rel="shortcut icon", href="/images/page_icons/favicon.ico", type="image/x-icon")
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css")
+    link(rel='stylesheet', href='/style.css')
+  body.my-container
+    header.Header.page-header.d-none.d-sm-block.pt-md-3.pt-lg-5.pb-3.clearfix
+        a.float-left(href="/")
+            img#singtao-logo(src="/images/page_icons/ST_logo.png", alt="Singtao Logo")
+            br
+            img#singtao-life(src="/images/page_icons/Singtao_Life.jpg", alt="Singtao life logo")
+        a(href="http://classified.singtaola.com/advertising_info/%E5%88%86%E9%A1%9E%E5%BB%A3%E5%91%8A/?variant=zh-cn")
+            img#postAd.d-none.d-lg-block.ad-posting-link.float-right(src="/images/page_icons/ad_posting_icon.jpg", alt="Ad posting link")
+
+    .Menu.sticky-top
+        nav.navbar.navbar-expand-lg.navbar-light.bg-light
+            button.navbar-toggler(type="button" data-toggle="collapse" data-target="#homeNavbar" aria-controls="homeNavbar" aria-expanded="false" aria-label="Toggle navigation")
+                span.navbar-toggler-icon
+            
+            #homeNavbar.collapse.navbar-collapse
+                ul.navbar-nav.mr-auto
+                    li.nav-item
+                        a.nav-link(href="/") 首頁
+                    li.nav-item
+                        a.nav-link(href="/classifiedAds") 分類廣告
+                    li.nav-item
+                        a.nav-link(href="/commercialAds") 商業廣告
+                    li.nav-item
+                        a.nav-link(href="/https://www.singtaousa.com/la/" target="_blank") 星島新聞
+
+    block content
+
+    footer.Footer
+        .Footer.info
+            .aside.contact
+                .title 聯絡我們
+                .media
+                    span.fa.fa-phone.mr-3
+                    .media-body
+                        span 總機 Main：
+                        span
+                            a(href="tel:6269568200") (626) 956-8200
+                            |  (電話), 
+                        span (626) 956-8208 (傳真), 
+                        span
+                            a(href="mailto:admin@singtaola.com") admin@singtaola.com
+                .media
+                    span.fa.fa-phone.mr-3
+                    .media-body
+                        span 廣告/市場部 Advertising & Marketing：
+                        span
+                            a(href="tel:6269568200") (626) 956-8200
+                            |  (電話), 
+                        span (626) 956-8108 (傳真), 
+                        span
+                            a(href="mailto:marketing@singtaola.com") marketing@singtaola.com
+                .media
+                    span.fa.fa-phone.mr-3
+                    .media-body
+                        span 訂閱部 Circulation Department：
+                        span
+                            a(href="tel:6269568227") (626) 956-8227
+                            |  (電話), 
+                        span (626) 239-3323 (傳真), 
+                        span
+                            a(href="mailto:circulation@singtaola.com") circulation@singtaola.com
+                .media
+                    span.fa.fa-envelope.mr-3
+                    .media-body
+                        span 會計部 Accounting Department：
+                        span (626) 956-8138 (傳真), 
+                        span
+                            a(href="mailto:accounting@singtaola.com") accounting@singtaola.com
+                .media
+                    span.fa.fa-envelope.mr-3
+                    .media-body
+                        span 新聞採訪部 News Department：
+                        span
+                            a(href="mailto:reporter@singtaola.com") reporter@singtaola.com
+                .media
+                    span.fa.fa-envelope.mr-3
+                    .media-body
+                        span 編輯部 Editorial  Department：
+                        span
+                            a(href="mailto:editor@singtaola.com") editor@singtaola.com
+            .aside.follow
+                .title 關注我們
+                .qr-wrapper
+                    img.qr-image(src="/images/QR/qr_facebook.png", alt="facebook @SingTaoLA")
+                    img.qr-image(src="/images/QR/qr_weibo.png", alt="weibo @SingTaoDaily")
+                    img.qr-image(src="/images/QR/qr_wechat.png", alt="wechat @SingTaoLosAngeles")
+        .Footer.copyright
+            .row
+                .col-md-auto
+                    a.mr-4(href="/privacy") 私隱政策聲明
+                    a.mr-4(href="/terms") 使用條款
+                    a(href="/copyright") 版權告示
+                .col-md-auto.ml-auto Copyright 2018 Sing Tao Ltd. All rights reserved.
+
+    script(src="https://code.jquery.com/jquery-3.2.1.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js")

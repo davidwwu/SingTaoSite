@@ -1,0 +1,152 @@
+extends maintenance_layout
+
+block content
+    if flash.error
+        .alert.alert-danger.alert-dismissible.fade.show(role="alert")
+            .alert-message !{flash.error}
+            button.close(type="button" data-dismiss="alert" aria-label="Close")
+                span(aria-hidden='true') &times;
+    if flash.success
+        .alert.alert-success.alert-dismissible.fade.show(role="alert")
+            .alert-message !{flash.success}
+            button.close(type="button" data-dismiss="alert" aria-label="Close")
+                span(aria-hidden='true') &times;
+    
+    // Deletion modal
+    #deleteModal.modal.fade(tabindex="-1" role="dialog")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header
+                    h5#deleteModalLabel.modal-title Delete
+                    button.close(type="button" data-dismiss="modal")
+                        span &times;
+                .modal-body
+                    // will set action by data-* attribute
+                    form#deleteModalForm(method='POST' action='')
+                        .form-group
+                            label.col-form-label(for="ad_id") Ad ID:
+                            input#ad_id.form-control(type='text' readonly)
+                        .form-group
+                            label.col-form-label(for="location") Location:
+                            input#location.form-control(type='text' readonly)
+                        .form-group
+                            label.col-form-label(for="title") Title:
+                            input#title.form-control(type='text' readonly)
+                        .form-group
+                            label.col-form-label(for="image") Image:
+                            div#deleteModalImagePlaceHolder()
+                        .form-group
+                            label.col-form-label(for="yt_short_link") YouTube Short Link:
+                            input#yt_short_link.form-control(type='text' readonly)
+                        .form-group
+                            label.col-form-label(for="yt_full_link") YouTube Full Link:
+                            input#yt_full_link.form-control(type='text' readonly)
+                        .modal-footer
+                            button.btn.btn-outline-secondary(type="button" data-dismiss="modal") Close
+                            button.btn.btn-danger(type='submit') Delete
+
+    .row
+        table.maint-list-table.table.table-bordered.table-hover.table-responsive-md
+            thead
+                tr.maint-list-title
+                    th(scope="col")
+                        a(href="?sortBy=customer_id").d-flex.justify-content-between Customer Id
+                            if sortBy == "customer_id"
+                                i.fas.fa-caret-down
+                    th(scope="col")
+                        a(href="?sortBy=customer_name").d-flex.justify-content-between Customer Name
+                            if sortBy == "customer_name"
+                                i.fas.fa-caret-down
+                    th(scope="col")
+                        a(href="?sortBy=title").d-flex.justify-content-between Title
+                            if sortBy == "title"
+                                i.fas.fa-caret-down
+                    th(scope="col")
+                        a(href="?sortBy=location").d-flex.justify-content-between Location
+                            if sortBy == "location"
+                                i.fas.fa-caret-down
+                    th(scope="col")
+                        a(href="?sortBy=start_date").d-flex.justify-content-between Start Date
+                            if sortBy == "start_date"
+                                i.fas.fa-caret-down
+                    th(scope="col")
+                        a(href="?sortBy=end_date").d-flex.justify-content-between End Date
+                            if sortBy == "end_date"
+                                i.fas.fa-caret-down
+                    th(scope="col")
+                        a(href="?sortBy=tags").d-flex.justify-content-between Tags
+                            if sortBy == "tags"
+                                i.fas.fa-caret-down
+                    th(scope="col") Edit
+                    th(scope="col") Delete
+                    th(scope="col") Status
+            tbody
+                each ad, index in ads
+                    if ad.status == 'Scheduled'
+                        tr.table-secondary
+                            th(scope="row") #{ad.customer.customer_id}
+                            th #{ad.customer.customer_name}
+                            th #{ad.title}
+                            th #{ad.location}
+                            th #{ad.start_date}
+                            th #{ad.end_date}
+                            th
+                                - let tags = ad.tags.map(tag => tag.cat_cn).join(", ");
+                                | #{tags}
+                            th#maint-list-edit.text-center
+                                a.btn.btn-outline-info(role="button" href="/maintenance/" + ad._id + "/edit")
+                                    i.far.fa-edit
+                            th#maint-list-delete.text-center
+                                button.btn.btn-outline-danger(role="button" data-toggle="modal" data-target="#deleteModal" data-post-to=("/maintenance/" + ad._id + "/delete") data-ad-id=ad.ad_id data-title=ad.title data-location=ad.location data-image=ad.image data-yt_short_link=ad.yt_short_link data-yt_full_link=ad.yt_full_link)
+                                        i.far.fa-trash-alt
+                                th #{ad.status}
+                    else if ad.status == 'Expired'
+                        tr.table-danger
+                            th(scope="row") #{ad.customer.customer_id}
+                            th #{ad.customer.customer_name}
+                            th #{ad.title}
+                            th #{ad.location}
+                            th #{ad.start_date}
+                            th #{ad.end_date}
+                            th
+                                - let tags = ad.tags.map(tag => tag.cat_cn).join(", ");
+                                | #{tags}
+                            th#maint-list-edit.text-center
+                                a.btn.btn-outline-info(role="button" href="/maintenance/" + ad._id + "/edit")
+                                    i.far.fa-edit
+                            th#maint-list-delete.text-center
+                                button.btn.btn-outline-danger(role="button" data-toggle="modal" data-target="#deleteModal" data-post-to=("/maintenance/" + ad._id + "/delete") data-ad-id=ad.ad_id data-title=ad.title data-location=ad.location data-image=ad.image data-yt_short_link=ad.yt_short_link data-yt_full_link=ad.yt_full_link)
+                                        i.far.fa-trash-alt
+                                th #{ad.status}
+                    else 
+                        tr
+                            th(scope="row") #{ad.customer.customer_id}
+                            th #{ad.customer.customer_name}
+                            th #{ad.title}
+                            th #{ad.location}
+                            th #{ad.start_date}
+                            th #{ad.end_date}
+                            th
+                                - let tags = ad.tags.map(tag => tag.cat_cn).join(", ");
+                                | #{tags}
+                            th#maint-list-edit.text-center
+                                a.btn.btn-outline-info(role="button" href="/maintenance/" + ad._id + "/edit")
+                                    i.far.fa-edit
+                            th#maint-list-delete.text-center
+                                button.btn.btn-outline-danger(role="button" data-toggle="modal" data-target="#deleteModal" data-post-to=("/maintenance/" + ad._id + "/delete") data-ad-id=ad.ad_id data-title=ad.title data-location=ad.location data-image=ad.image data-yt_short_link=ad.yt_short_link data-yt_full_link=ad.yt_full_link)
+                                        i.far.fa-trash-alt
+                                th #{ad.status}
+    .row.justify-content-center.mt-5
+        - var n = 0;
+        - var pageNumberInt = parseInt(pageNumber);
+
+        nav.pagination-nav
+            ul.pagination
+                li.page-item(class=(pageNumberInt === 1 ? "disabled" : null))
+                    a.page-link(href="?sortBy=" + sortBy + "&pageNumber=" + (pageNumberInt-1) tabindex="-1") Previous
+                while n < totalPages
+                    li.page-item(class=(pageNumberInt === ++n ? "active" : null))
+                        a.page-link(href="?sortBy=" + sortBy + "&pageNumber=" + n)= n
+                li.page-item(class=(pageNumberInt === totalPages ? "disabled" : null))
+                    a.page-link(href="?sortBy=" + sortBy + "&pageNumber=" + (pageNumberInt+1)) Next
+

@@ -1,0 +1,42 @@
+doctype html
+html
+    head
+        title= 'Create New User'
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+
+        //- script(src="https://use.fontawesome.com/db9cb83054.js")
+        script(src="https://use.fontawesome.com/releases/v5.0.1/js/all.js")
+
+        link(rel="shortcut icon", href="/images/page_icons/favicon.ico", type="image/x-icon")
+        link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css")
+        link(rel='stylesheet', href='/signin_style.css')
+    body
+        .container
+            if flash.error
+                .alert.alert-danger.alert-dismissible.fade.show(role="alert")
+                    .alert-message !{flash.error}
+                    button.close(type="button" data-dismiss="alert" aria-label="Close")
+                        span(aria-hidden='true') &times;
+            form.form-signin(action="" method="POST" enctype='application/x-www-form-urlencoded')
+                h2.form-signin-heading Thanks for signing up!
+
+                label.sr-only(for="inputEmail") Email address
+                input#inputEmail.form-control(type="email" name="email" placeholder="Email address" value=(sentData !== undefined ? sentData.email : null) required autofocus)
+
+                label.sr-only(for="inputUserName") User name
+                input#inputUsername.form-control(type="text" name="username" placeholder="User name" value=(sentData !== undefined ? sentData.username : null) required)
+
+                label.sr-only(for="inputPassword") Password
+                input#inputPassword.form-control(type="password" name="password" placeholder="Password" required)
+
+                label.sr-only(for="inputPasswordConf") Password confirmation
+                input#inputPasswordConf.form-control(type="password" name="passwordConf" placeholder="Confirm password" required)
+
+                button.btn.btn-lg.btn-primary.btn-block(type="submit") Sign Up
+
+        script(src="https://code.jquery.com/jquery-3.2.1.min.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js")
+        script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js")
+        script(src="/script.js")
+        

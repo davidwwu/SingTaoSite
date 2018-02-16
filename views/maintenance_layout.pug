@@ -1,0 +1,43 @@
+doctype html
+html
+  head
+    title= title
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+
+    //- script(src="https://use.fontawesome.com/db9cb83054.js")
+    script(src="https://use.fontawesome.com/releases/v5.0.1/js/all.js")
+
+    link(rel="shortcut icon", href="/images/page_icons/favicon.ico", type="image/x-icon")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css")
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css")
+    link(rel='stylesheet', href='/style.css')
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.25/jquery.fancybox.min.css")
+  body
+    nav.navbar.navbar-expand-sm.navbar-dark.bg-dark.sticky-top
+      a.navbar-brand(href="/maintenance") Ads Editing
+      button.navbar-toggler(type="button" data-toggle="collapse" data-target="#maintenanceNav")
+        span.navbar-toggler-icon
+      #maintenanceNav.collapse.navbar-collapse
+        ul.navbar-nav.d-flex
+          li.nav-item(class=(title == "List" ? "active" : null))
+            a.nav-link(href="/maintenance") Ad List
+          li.nav-item(class=(title == "Create" ? "active" : null))
+            a.nav-link(href="/maintenance/create") Create New Ad
+          li.nav-item
+            a.nav-link(href="/") Back to Main Site
+        ul.navbar-nav.ml-sm-auto.d-flex
+          li.nav-item
+            a.nav-link(href="/maintenance_logout") Logout
+    .p-4(class=(title == "List" ? "container-fluid" : "container"))
+      block content
+
+    script(src="https://code.jquery.com/jquery-3.2.1.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.25/jquery.fancybox.min.js")
+    script(src="/script.js")
+    

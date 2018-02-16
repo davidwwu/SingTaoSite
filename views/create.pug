@@ -1,0 +1,234 @@
+extends maintenance_layout
+
+block content
+  if flash.error
+    .alert.alert-danger.alert-dismissible.fade.show(role="alert")
+      .alert-message !{flash.error}
+      button.close(type="button" data-dismiss="alert" aria-label="Close")
+        span(aria-hidden='true') &times;
+  if flash.success
+    .alert.alert-success.alert-dismissible.fade.show(role="alert")
+      .alert-message !{flash.success}
+      button.close(type="button" data-dismiss="alert" aria-label="Close")
+        span(aria-hidden='true') &times;
+  .row
+    h1.display-4.mb-2 #{title}
+  .row
+    .mb-4.text-danger * Required
+  form.row(method='POST' action='' enctype=(title !== 'Create' ? 'application/x-www-form-urlencoded' : 'multipart/form-data'))
+    .col-md-6.col-md-offset-3
+      h2.m-b-2 Customer Info
+      .form-group
+        label(for='customerId') Customer ID:
+        | 
+        span.text-danger *
+        input#customerId.form-control(type='text' name='customerId' value=(ad === undefined ? '' : ad.customer.customer_id) readonly=(ad === undefined ? false : true) required)
+      .form-group
+        label(for='customerId') Customer Name:
+        | 
+        span.text-danger *
+        | 
+        small.text-muted Business name or personal name
+        input#customerName.form-control(type='text' name='customerName' value=(ad === undefined ? '' : ad.customer.customer_name) required)
+      .form-row
+        .form-group.col-md-6
+          label(for='firstName') Customer First Name:
+          input#firstName.form-control(type='text' placeholder='First Name' name='firstName' value=(ad === undefined ? '' : ad.customer.first_name))
+        .form-group.col-md-6
+          label(for='lastName') Customer Last Name:
+          input#lastName.form-control(type='text' placeholder='Last Name' name='lastName' value=(ad === undefined ? '' : ad.customer.last_name))
+      .form-group
+        label(for='email') Email:
+        input#email.form-control(type='email' placeholder='name@email.com' name='email' value=(ad === undefined ? '' : ad.customer.email))
+      .form-group
+        label(for='phone') Phone:
+        input#phone.form-control(type='tel' name='phone' value=(ad === undefined ? '' : ad.customer.phone))
+      .form-group
+        label(for='address') Address:
+        input#address.form-control(type='text' placeholder='123 Example Street' name='address' value=(ad === undefined ? '' : ad.customer.address))
+
+    .col-md-6.col-md-offset-3
+      h2.m-b-2 Ad Info
+      .form-group
+        label(for='ad_id') Ad Id:
+          | 
+          span.text-danger *
+        input#ad_id.form-control(type='text' name='adId' value=(ad === undefined ? '' : ad.ad_id) readonly=(ad === undefined ? false : true) required)
+      .form-group
+        label(for='locations') Ad Location:
+        | 
+        span.text-danger *
+        #locations
+          if (ad === undefined)
+            .form-check.form-check-inline
+              label.form-check-label
+                input#location_TOP.form-check-input(type='radio' name='location' value='top')
+                | 頂部廣告
+            .form-check.form-check-inline
+              label.form-check-label
+                input#location_AL.sideAd_radio.form-check-input(type='radio' name='location' value='aside-left')
+                | 左側廣告
+            .form-check.form-check-inline
+              label.form-check-label
+                input#location_AR.sideAd_radio.form-check-input(type='radio' name='location' value='aside-right' checked)
+                | 右側廣告
+            .form-check.form-check-inline
+              label.form-check-label
+                input#location_CA.form-check-input(type='radio' name='location' value='commercial')
+                | 商業廣告
+            .form-check.form-check-inline
+              label.form-check-label
+                input#location_SA.form-check-input(type='radio' name='location' value='slider')
+                | Slideshow 廣告
+          else
+            .form-check.form-check-inline
+              label.form-check-label
+                input#location_TOP.form-check-input(type='radio' name='location' value='top' checked=(ad.location == 'top'))
+                | 頂部廣告
+            .form-check.form-check-inline
+              label.form-check-label
+                input#location_AL.sideAd_radio.form-check-input(type='radio' name='location' value='aside-left' checked=(ad.location == 'aside-left'))
+                | 左側廣告
+            .form-check.form-check-inline
+              label.form-check-label
+                input#location_AR.sideAd_radio.form-check-input(type='radio' name='location' value='aside-right' checked=(ad.location == 'aside-right'))
+                | 右側廣告
+            .form-check.form-check-inline
+              label.form-check-label
+                input#location_CA.form-check-input(type='radio' name='location' value='commercial' checked=(ad.location == 'commercial'))
+                | 商業廣告
+            .form-check.form-check-inline
+              label.form-check-label
+                input#location_SA.form-check-input(type='radio' name='location' value='slider' checked=(ad.location == 'slider'))
+                | Slideshow 廣告
+      
+      #order_selector_section.form-group
+        label(for='order') Order:
+        |
+        span.text-danger *
+        select#order.form-control(name='order' required)
+          if (ad === undefined)
+            option(selected value='') Choose order...
+            - var n = 0;
+            while n < 15
+              option(value=++n)= n
+          else
+            option(value='') Choose order...
+            - var n = 0;
+            while n < 15
+              option(value=++n selected=(ad.order == n))= n
+
+      #category_selector_section.form-group.hidden
+        label(for='category') Category:
+          | 
+          span.text-danger *
+        if (ad === undefined)
+          select#category.form-control(name='category')
+            option(selected value="") Choose one...
+            each c_ad in commercial_ads
+              option(value=c_ad._id) #{c_ad.cat_cn}
+        else
+          select#category.form-control(name='category')
+            option(value="") Choose one...
+            each c_ad in commercial_ads
+              option(value=c_ad._id selected=c_ad.catSelected) #{c_ad.cat_cn}
+      .form-group
+        label(for='title') Title:
+          | 
+          span.text-danger *
+        input#title.form-control(type='text' placeholder='Title' name='title' value=(ad === undefined ? '' : ad.title) required)
+      .form-group
+        label(for='description') Description:
+        textarea#description.form-control(type='text' placeholder='Description' name='description' rows='3')
+          | #{ad === undefined ? '' : ad.description}
+      .form-group
+        label(for='link') External Link:
+        input#link.form-control(type='url' name='link' placeholder='http://example.com' value=(ad === undefined ? '' : ad.ad_link))
+        small#linkHelpText.form-text.text-muted Make sure http:// or https:// is included.
+      .form-row
+        .form-group.col-md
+          label(for='startDate') Start Date:
+          | 
+          span.text-danger *
+          | 
+          small.text-muted Defaults today
+          input#startDate.form-control(type='date' placeholder='dd/mm/yyyy' name='startDate' value=(ad === undefined ? defaultStartDate : ad.start_date))
+        .form-group.col-md
+          label(for='endDate') End Date:
+          input#endDate.form-control(type='date' placeholder='dd/mm/yyyy' name='endDate' value=(ad === undefined ? '' : ad.end_date))
+      .form-group
+        label(for='meida-format') Media Format:
+        | 
+        span.text-danger *
+        #media-format
+          if (ad === undefined)
+            .form-check.form-check-inline
+              label.form-check-label
+                input#media_image.form-check-input(type='radio' name='mediaFormat' value='image' checked)
+                | Image
+            .form-check.form-check-inline
+              label.form-check-label
+                input#media_youtube.form-check-input(type='radio' name='mediaFormat' value='youtube')
+                | YouTube Link
+          else
+            .form-check.form-check-inline
+              label.form-check-label
+                input#media_image.form-check-input(type='radio' name='mediaFormat' value='image' checked=(ad.media_format == 'image'))
+                | Image
+            .form-check.form-check-inline
+              label.form-check-label
+                input#media_youtube.form-check-input(type='radio' name='mediaFormat' value='youtube' checked=(ad.media_format == 'youtube'))
+                | YouTube Link
+      #image_section.form-group
+        label(for='image') Image:
+        | 
+        span.text-danger *
+        if (title === "Create")
+          .fileinput.fileinput-new(data-provides="fileinput" style={width: '100%'})
+            .fileinput-preview.fileinput-exists.thumbnail(style={'max-width': '200px', 'max-height': '150px'})
+            div
+              span.btn.btn-default.btn-file
+                span.fileinput-new Select Image
+                span.fileinput-exists Change
+                input#image.form-control-file(type='file' accept="image/*" name="image" required)
+              span.btn.btn-outline-danger.ml-1.fileinput-exists(data-dismiss="fileinput") Remove
+        else if (ad.image === "")
+          div
+            | [ NO IMAGE ]
+        else
+          div(style={overflow: 'hidden'})
+            a(href=ad.image data-fancybox="ad-image" data-caption="Ad Image")
+              img(src=ad.image style={'max-height': '200px'} alt="Ad image")
+          small.form-text.text-muted Click to see full size image.
+      #ytLink_section.form-group.hidden
+        label(for='ytShortLink') YouTube Short Link:
+        | 
+        span.text-danger *
+        input#ytShortLink.form-control.mb-3(type='url' name='ytShortLink' value=(ad === undefined ? '' : ad.yt_short_link))
+        label(for='ytFullLink') YouTube Full Link:
+        | 
+        span.text-danger *
+        input#ytFullLink.form-control(type='url' name='ytFullLink' value=(ad === undefined ? '' : ad.yt_full_link))
+      .form-group
+        label(for='tags') Tags:
+        #tags
+          if classified_ads
+            | 分類廣告類別
+            br
+            each c_ad in classified_ads
+              .form-check.form-check-inline
+                label.form-check-label
+                  input.form-check-input(type='checkbox' name='tags' value=c_ad._id checked=c_ad.tagChecked)
+                  | #{c_ad.cat_cn}
+            br
+          if commercial_ads
+            | 商業廣告類別
+            br
+            each c_ad in commercial_ads
+              .form-check.form-check-inline
+                label.form-check-label
+                  input.form-check-input(type='checkbox' name='tags' value=c_ad._id checked=c_ad.tagChecked)
+                  | #{c_ad.cat_cn}
+    button.btn.btn-primary(type='submit') #{title}
+    button.btn.btn-default.ml-3(type='reset') Reset
+    a.btn.btn-default.ml-3(rule='button' href='/maintenance') Back To List
