@@ -1,0 +1,18 @@
+extends order_form_layout
+
+block content
+    h4 成功遞交投稿!
+    p
+        | 您的畫面在10秒後將會自動導回投稿頁面...
+        br
+        | (若10秒後尚未自動導回，請
+        a(href="/order_form") 點此
+        | 回到投稿頁面。)
+    script.
+        function redirect(page) {
+            setTimeout(() => {
+                window.location.replace(location.origin + page);
+            }, 10000)
+        }
+
+        redirect("/order_form");

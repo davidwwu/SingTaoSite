@@ -152,10 +152,10 @@ block content
           span.text-danger *
           | 
           small.text-muted Defaults today
-          input#startDate.form-control(type='date' placeholder='dd/mm/yyyy' name='startDate' value=(ad === undefined ? defaultStartDate : ad.start_date))
+          input#startDate.form-control(type='date' placeholder='mm/dd/yyyy' name='startDate' value=(ad === undefined ? defaultStartDate : ad.start_date))
         .form-group.col-md
           label(for='endDate') End Date:
-          input#endDate.form-control(type='date' placeholder='dd/mm/yyyy' name='endDate' value=(ad === undefined ? '' : ad.end_date))
+          input#endDate.form-control(type='date' placeholder='mm/dd/yyyy' name='endDate' value=(ad === undefined ? '' : ad.end_date))
       .form-group
         label(for='meida-format') Media Format:
         | 

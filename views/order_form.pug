@@ -1,0 +1,173 @@
+extends order_form_layout
+
+block content
+    //- scripts starts here...
+    script.
+        function recaptchaSuccess() {
+            $('#submitBtn').prop('disabled', false);
+        }
+        function recaptchaExpired() {
+            $('#submitBtn').prop('disabled', true);
+        }
+        function onSubmit(form) {
+            $('#submitBtn').html('<i class="fas fa-sync fa-spin mr-2"></i> Submitting...');
+            $('#submitBtn').prop('disabled', true);
+            return true;
+        }
+
+    if flash.error
+        .alert.alert-danger.alert-dismissible.fade.show(role="alert")
+            .alert-message !{flash.error}
+            button.close(type="button" data-dismiss="alert" aria-label="Close")
+                span(aria-hidden='true') &times;
+    
+    .mb-4
+        h5 歡迎到星島日報據點刊登分類廣告 
+        h5.mb-3 Need to post classified ads? Find Sing Tao Ad Agent near you.
+        a(href="/images/page_icons/submit_location.jpg" data-fancybox="ad-image" data-caption="Submission location")
+            img.mx-auto(src="/images/page_icons/submit_location.jpg", alt="Submission location", style={"max-width": "100%"})
+        small.form-text.text-muted.mb-4 Click to see full size image.
+        
+        h5.mb-3 歡迎您直接線上填寫:
+        a(href="/images/page_icons/order_brochure.jpg" data-fancybox="ad-image" data-caption="Ordering brochure")
+            img.mx-auto(src="/images/page_icons/order_brochure.jpg", alt="Ordering brochure", style={"max-width": "100%"})
+        small.form-text.text-muted.mb-4 Click to see full size image.
+
+    h5 分類廣告投稿表格如下:
+    .mb-3.text-danger * Required
+    form(method='POST', action='', onsubmit="return onSubmit(this);", enctype='application/x-www-form-urlencoded')
+        h4.mb-3 Ad Info.
+        .mb-3
+            label(for="ad-title") 大字 (最多四個字/格)
+            | 
+            span.text-danger *
+            textarea#ad-title.form-control(name="ad-title", cols="30", rows="1", value=(ad === undefined ? "" : ad.ad-title), required)
+        .mb-3
+            label(for="ad-desc") 小字 (最多45個字/格)
+            | 
+            span.text-danger *
+            textarea#ad-desc.form-control(name="ad-desc", cols="30", rows="1", value=(ad === undefined ? "" : ad.ad-desc), required)
+        .mb-3
+            label(for="size") 格數
+            if ad === undefined
+                .form-check.mb-2
+                    input#size-11.form-check-input(type="radio", name="size", value="1x1")
+                    label.form-check-label(for="size-11") 1 x 1
+                .form-check.mb-2
+                    input#size-21.form-check-input(type="radio", name="size", value="2x1")
+                    label.form-check-label(for="size-21") 2 x 1
+                .form-check.mb-2
+                    input#size-22.form-check-input(type="radio", name="size", value="2x2")
+                    label.form-check-label(for="size-22") 2 x 2
+                .form-check.mb-2
+                    input#size-32.form-check-input(type="radio", name="size", value="3x2")
+                    label.form-check-label(for="size-32") 3 x 2
+            else
+                .form-check.mb-2
+                    input#size-11.form-check-input(type="radio", name="size", value="1x1", checked=(ad.size == "1x1"))
+                    label.form-check-label(for="size-11") 1 x 1
+                .form-check.mb-2
+                    input#size-21.form-check-input(type="radio", name="size", value="2x1", checked=(ad.size == "2x1"))
+                    label.form-check-label(for="size-21") 2 x 1
+                .form-check.mb-2
+                    input#size-22.form-check-input(type="radio", name="size", value="2x2", checked=(ad.size == "2x2"))
+                    label.form-check-label(for="size-22") 2 x 2
+                .form-check.mb-2
+                    input#size-32.form-check-input(type="radio", name="size", value="3x2", checked=(ad.size == "3x2"))
+                    label.form-check-label(for="size-32") 3 x 2
+            .mb-3
+                input#special-size.form-control(type="text", name="special-size", placeholder="其他格數", value=(ad === undefined ? "" : ad.special-size))
+        .mb-3
+            label(for="post-date") 刊登日期
+            input#post-date.form-control(type="date", name="start-date", placeholder="mm/dd/yyyy", value=(ad === undefined ? defaultStartDate : ad.start-date))
+        .mb-3
+            label(for="length") 刊登日數
+            .row
+                .col-sm-4.input-group.mb-3
+                    input.form-control(type="text", name="days", placeholder="(至少3日)", value=(ad === undefined ? "" : ad.days))
+                    .input-group-append
+                        span.input-group-text 天
+                .col-sm-4.input-group.mb-3
+                    input.form-control(type="text", name="weeks", value=(ad === undefined ? "" : ad.weeks))
+                    .input-group-append
+                        span.input-group-text 星期
+                .col-sm-4.input-group.mb-3
+                    input.form-control(type="text", name="months", value=(ad === undefined ? "" : ad.months))
+                    .input-group-append
+                        span.input-group-text 月
+
+        hr.mb-4
+        h4.mb-3 Billing Info.
+        .row
+            .col-sm-6.mb-3
+                label(for="firstName") First Name
+                | 
+                span.text-danger *
+                input#firstName.form-control(type="text", name="first-name", value=(ad === undefined ? "" : ad.first-name), required) 
+            .col-sm-6.mb-3
+                label(for="lastName") Last Name
+                | 
+                span.text-danger *
+                input#lastName.form-control(type="text", name="last-name", value=(ad === undefined ? "" : ad.last-name), required)
+        .row
+            .col-sm-6.mb-3
+                label(for="tel") Phone number
+                | 
+                span.text-danger *
+                input#tel.form-control(type="tel", name="phone", value=(ad === undefined ? "" : ad.phone))
+            .col-sm-6.mb-3
+                label(for="fax") Fax number
+                input#fax.form-control(type="tel", name="fax", value=(ad === undefined ? "" : ad.fax))
+        .mb-3
+            label(for="address") Address
+            | 
+            span.text-danger *
+            input#address.form-control(type="text", name="address", placeholder="123 Main St.", value=(ad === undefined ? "" : ad.address), required)
+        .mb-3
+            label(for="address2") Address 2 (Optional)
+            input#address2.form-control(type="text", name="address2", placeholder="Apartment or suite", value=(ad === undefined ? "" : ad.address2))
+        .row
+            .col-sm-5.mb-3
+                label(for="state") City
+                | 
+                span.text-danger *
+                input#city.form-control(type="text", name="city", placeholder="e.g. Los Angeles", value=(ad === undefined ? "" : ad.city), required)
+            .col-sm-3.mb-3
+                label(for="state") State
+                | 
+                span.text-danger *
+                input#state.form-control(type="text", name="state", placeholder="e.g. CA", value=(ad === undefined ? "" : ad.state), required)
+            .col-sm-4.mb-3
+                label(for="zip") Zip Code
+                | 
+                span.text-danger *
+                input#zip.form-control(type="text", name="zip", value=(ad === undefined ? "" : ad.zip), required)
+        hr.mb-4
+        h4.mb-3 Payment Info.
+        .row
+            .col-sm-6.mb-3
+                label(for="cc-name") Name on card
+                | 
+                span.text-danger *
+                input#cc-name.form-control(type="text", name="credit-card-name", required)
+            .col-sm-6.mb-3
+                label(for="cc-number") Credit card number
+                | 
+                span.text-danger *
+                input#cc-number.form-control(type="text", name="credit-card-number", required)
+        .row
+            .col-sm-3.mb-3
+                label(for="cc-expiration") Exp. date
+                | 
+                span.text-danger *
+                input#cc-expiration.form-control(type="text", name="credit-card-expiratoin", required)
+            .col-sm-3.mb-3
+                label(for="cc-cvv") CVV/CVC
+                | 
+                span.text-danger *
+                input#cc-cvv.form-control(type="text", name="credit-card-cvv", required)
+        hr.mb-4
+
+        small.form-text.text-muted.mb-2 Please complete the reCAPTCHA challenge.
+        .g-recaptcha.mb-4(data-callback="recaptchaSuccess" data-expired-callback="recaptchaExpired" data-sitekey="6LfmO0gUAAAAACHw5NWpW7TssoYZtV2NOkUxTkgd")
+        button#submitBtn.btn.btn-primary.btn-lg.btn-block(type="submit", disabled) Submit order

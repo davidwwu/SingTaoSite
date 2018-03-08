@@ -7,6 +7,8 @@ var session = require('express-session');
 var flash = require('express-flash-2');
 var multer = require('multer');
 var passport = require('passport');
+var moment = require('moment');
+var sendmail = require('sendmail')({silent: true});
 
 import config from './config';
 import apiRouter from './api';
@@ -63,50 +65,6 @@ server.use(passport.session());
 passport.use(auth_controller.authStrategy);
 passport.serializeUser(auth_controller.authSerializer);
 passport.deserializeUser(auth_controller.authDeserializer);
-
-
-server.get('/new_user', (req, res) => {
-    res.render('new_user');
-});
-server.post('/new_user', auth_controller.user_create_post);
-
-server.get('/maintenance_login', (req, res) => {
-    res.render('login');
-});
-// server.post('/maintenance_login', passport.authenticate('local', {
-//     successRedirect: '/maintenance',
-//     failureRedirect: '/maintenance_login',
-//     failureFlash: true
-// }));
-
-server.post('/maintenance_login', (req, res, next) => {
-    passport.authenticate('local', function(err, user, info) {
-        if (err) { return next(err); }
-        if (!user) { 
-            res.flash('error', 'Password incorrect.');
-            return res.redirect('/maintenance_login'); 
-        }
-
-        req.logIn(user, function(err) {
-            if (err) { return next(err); }
-            res.flash('success', 'Logged in.');
-            return res.redirect('/maintenance');
-        });
-    })(req, res, next);
-});
-
-server.get('/maintenance_logout', auth_controller.logout);
-
-server.get('/maintenance:query?', auth_controller.restrict, maintenance_controller.maintenance_list);
-
-server.get('/maintenance/create', auth_controller.restrict, maintenance_controller.maintenance_create_get);
-server.post('/maintenance/create', auth_controller.restrict, upload.single("image"), maintenance_controller.maintenance_create_post);
-
-server.get('/maintenance/:id/edit', auth_controller.restrict, maintenance_controller.maintenance_edit_get);
-server.post('/maintenance/:id/edit', auth_controller.restrict, maintenance_controller.maintenance_edit_post);
-
-server.post('/maintenance/:id/delete', auth_controller.restrict, maintenance_controller.maintenance_delete_post);
-
 
 let cls_cats, com_cats, slider_ads, aside_right, aside_left, top_ad;
 
@@ -280,22 +238,87 @@ server.get('/commercialAds/:cat?/:id?' , (req, res) => {
 
 server.get('/copyright', (req, res) => {
     res.render('copyright');
-})
+});
 
 server.get('/privacy', (req, res) => {
     res.render('privacy');
-})
+});
 
 server.get('/terms', (req, res) => {
     res.render('terms');
+});
+
+server.get('/new_user', (req, res) => {
+    res.render('new_user');
+});
+server.post('/new_user', auth_controller.user_create_post);
+
+server.get('/maintenance_login', (req, res) => {
+    res.render('login');
+});
+// server.post('/maintenance_login', passport.authenticate('local', {
+//     successRedirect: '/maintenance',
+//     failureRedirect: '/maintenance_login',
+//     failureFlash: true
+// }));
+
+server.post('/maintenance_login', (req, res, next) => {
+    passport.authenticate('local', function(err, user, info) {
+        if (err) { return next(err); }
+        if (!user) { 
+            res.flash('error', 'Password incorrect.');
+            return res.redirect('/maintenance_login'); 
+        }
+
+        req.logIn(user, function(err) {
+            if (err) { return next(err); }
+            res.flash('success', 'Logged in.');
+            return res.redirect('/maintenance');
+        });
+    })(req, res, next);
+});
+
+server.get('/maintenance_logout', auth_controller.logout);
+
+server.get('/maintenance:query?', auth_controller.restrict, maintenance_controller.maintenance_list);
+
+server.get('/maintenance/create', auth_controller.restrict, maintenance_controller.maintenance_create_get);
+server.post('/maintenance/create', auth_controller.restrict, upload.single("image"), maintenance_controller.maintenance_create_post);
+
+server.get('/maintenance/:id/edit', auth_controller.restrict, maintenance_controller.maintenance_edit_get);
+server.post('/maintenance/:id/edit', auth_controller.restrict, maintenance_controller.maintenance_edit_post);
+
+server.post('/maintenance/:id/delete', auth_controller.restrict, maintenance_controller.maintenance_delete_post);
+
+
+server.get('/order_form', (req, res) => {
+    res.render('order_form', {
+        defaultStartDate: moment().format('YYYY-MM-DD')
+    });
+});
+server.post('/order_form', (req, res) => {
+    sendmail({
+        from: 'no-reply@singtao-ad-posting.singtaola.com',
+        to: 'david@wudavid.com',
+        subject: 'New Ad Posting Request Form',
+        html: '<pre>' + JSON.stringify(req.body, null, 4) + '</pre>',
+    }, function(err, reply) {
+        if (err) {
+            console.log(err && err.stack);
+            res.flash('error', 'Oops, something went worng.\nPlease try again later.');
+            res.render('order_form', {
+                ad: data
+            });
+        }
+
+        res.render('order_success');
+    });
+});
+
+// catch all non-matched uri's
+server.use("*",function(req,res) {
+    res.status(404).send("<h2>Oops, 404 page not found.</h4><p>Please double check if your URL is correct.</p>");
 })
-
-// server.use(function (err, req, res, next) {
-//     console.error(err.stack);
-//     res.status(404).send('Something broke!');
-// });
-
-
 
 server.listen(config.port, config.host, () => {
     console.info('Node server is running on port', config.port);
