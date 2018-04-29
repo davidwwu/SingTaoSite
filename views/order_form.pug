@@ -16,7 +16,7 @@ block content
         }
 
     if flash.error
-        .alert.alert-danger.alert-dismissible.fade.show(role="alert")
+        .alert.alert-danger.alert-dismissible.fade.show(role="alert" style={ "position": "absolute", "top": "50px", "right": "30px", "z-index": "100" })
             .alert-message !{flash.error}
             button.close(type="button" data-dismiss="alert" aria-label="Close")
                 span(aria-hidden='true') &times;
@@ -38,15 +38,17 @@ block content
     form(method='POST', action='', onsubmit="return onSubmit(this);", enctype='application/x-www-form-urlencoded')
         h4.mb-3 Ad Info.
         .mb-3
-            label(for="ad-title") 大字 (最多四個字/格)
+            label(for="adTitle") 大字 (最多四個字/格)
             | 
             span.text-danger *
-            textarea#ad-title.form-control(name="ad-title", cols="30", rows="1", value=(ad === undefined ? "" : ad.ad-title), required)
+            textarea#adTitle.form-control(name="ad_title", cols="30", rows="1", required)
+                | #{ad === undefined ? '' : ad.ad_title}
         .mb-3
-            label(for="ad-desc") 小字 (最多45個字/格)
+            label(for="adDesc") 小字 (最多45個字/格)
             | 
             span.text-danger *
-            textarea#ad-desc.form-control(name="ad-desc", cols="30", rows="1", value=(ad === undefined ? "" : ad.ad-desc), required)
+            textarea#adDesc.form-control(name="ad_desc", cols="30", rows="3", required)
+                | #{ad === undefined ? '' : ad.ad_desc}
         .mb-3
             label(for="size") 格數
             if ad === undefined
@@ -76,10 +78,10 @@ block content
                     input#size-32.form-check-input(type="radio", name="size", value="3x2", checked=(ad.size == "3x2"))
                     label.form-check-label(for="size-32") 3 x 2
             .mb-3
-                input#special-size.form-control(type="text", name="special-size", placeholder="其他格數", value=(ad === undefined ? "" : ad.special-size))
+                input#specialSize.form-control(type="text", name="special_size", placeholder="其他格數", value=(ad === undefined ? "" : ad.special_size))
         .mb-3
-            label(for="post-date") 刊登日期
-            input#post-date.form-control(type="date", name="start-date", placeholder="mm/dd/yyyy", value=(ad === undefined ? defaultStartDate : ad.start-date))
+            label(for="postDate") 刊登日期
+            input#postDate.form-control(type="date", name="start_date", placeholder="mm/dd/yyyy", value=(ad === undefined ? defaultStartDate : ad.start_date))
         .mb-3
             label(for="length") 刊登日數
             .row
@@ -103,12 +105,12 @@ block content
                 label(for="firstName") First Name
                 | 
                 span.text-danger *
-                input#firstName.form-control(type="text", name="first-name", value=(ad === undefined ? "" : ad.first-name), required) 
+                input#firstName.form-control(type="text", name="first_name", value=(ad === undefined ? "" : ad.first_name), required) 
             .col-sm-6.mb-3
                 label(for="lastName") Last Name
                 | 
                 span.text-danger *
-                input#lastName.form-control(type="text", name="last-name", value=(ad === undefined ? "" : ad.last-name), required)
+                input#lastName.form-control(type="text", name="last_name", value=(ad === undefined ? "" : ad.last_name), required)
         .row
             .col-sm-6.mb-3
                 label(for="tel") Phone number
@@ -146,26 +148,26 @@ block content
         h4.mb-3 Payment Info.
         .row
             .col-sm-6.mb-3
-                label(for="cc-name") Name on card
+                label(for="ccName") Name on card
                 | 
                 span.text-danger *
-                input#cc-name.form-control(type="text", name="credit-card-name", required)
+                input#ccName.form-control(type="text", name="credit_card_name", required)
             .col-sm-6.mb-3
-                label(for="cc-number") Credit card number
+                label(for="ccNumber") Credit card number
                 | 
                 span.text-danger *
-                input#cc-number.form-control(type="text", name="credit-card-number", required)
+                input#ccNumber.form-control(type="text", name="credit_card_number", required)
         .row
             .col-sm-3.mb-3
-                label(for="cc-expiration") Exp. date
+                label(for="ccExpiration") Exp. date
                 | 
                 span.text-danger *
-                input#cc-expiration.form-control(type="text", name="credit-card-expiratoin", required)
+                input#ccExpiration.form-control(type="text", name="credit_card_expiratoin", required)
             .col-sm-3.mb-3
-                label(for="cc-cvv") CVV/CVC
+                label(for="ccCVV") CVV/CVC
                 | 
                 span.text-danger *
-                input#cc-cvv.form-control(type="text", name="credit-card-cvv", required)
+                input#ccCVV.form-control(type="text", name="credit_card_cvv", required)
         hr.mb-4
 
         small.form-text.text-muted.mb-2 Please complete the reCAPTCHA challenge.

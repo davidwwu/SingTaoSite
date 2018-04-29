@@ -8,7 +8,7 @@ var flash = require('express-flash-2');
 var multer = require('multer');
 var passport = require('passport');
 var moment = require('moment');
-var sendmail = require('sendmail')({silent: true});
+var sendmail = require('sendmail')({ silent: true });
 
 import config from './config';
 import apiRouter from './api';
@@ -297,17 +297,32 @@ server.get('/order_form', (req, res) => {
     });
 });
 server.post('/order_form', (req, res) => {
+    let formattedHTML = "";
+    let originalJSON = req.body;
+
+    for (let key in originalJSON) {
+		if (key !== "g-recaptcha-response" && originalJSON[key] !== "") {
+            if (key === "ad_title" || key === "ad_desc") {
+                formattedHTML += key + " : <pre>" + originalJSON[key] + "</pre>"; 
+            } else {
+                formattedHTML += key + " : " + originalJSON[key] + "<br>";
+            }
+        }
+    }
+    
     sendmail({
         from: 'no-reply@singtao-ad-posting.singtaola.com',
-        to: 'david@wudavid.com',
+        to: 'marketing@singtaola.com',
         subject: 'New Ad Posting Request Form',
-        html: '<pre>' + JSON.stringify(req.body, null, 4) + '</pre>',
+        html: '<div>' + formattedHTML + '</div>',
     }, function(err, reply) {
         if (err) {
             console.log(err && err.stack);
-            res.flash('error', 'Oops, something went worng.\nPlease try again later.');
             res.render('order_form', {
-                ad: data
+                flash: {
+                    error: 'Oops, something went worng.<br>Please try again later.'
+                },
+                ad: originalJSON
             });
         }
 
@@ -317,7 +332,19 @@ server.post('/order_form', (req, res) => {
 
 // catch all non-matched uri's
 server.use("*",function(req,res) {
-    res.status(404).send("<h2>Oops, 404 page not found.</h4><p>Please double check if your URL is correct.</p>");
+    res.status(404).send("<div style='color:#000;background:#fff;font-family:-apple-system, BlinkMacSystemFont, Roboto, &quot;Segoe UI&quot;, &quot;Fira Sans&quot;, Avenir, &quot;Helvetica Neue&quot;, &quot;Lucida Grande&quot;, sans-serif;height:100vh;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center'>" +
+        "<div>" +
+            "<style>" +
+                "body {" +
+                    "margin: 0" +
+                "}" +
+            "</style>" +
+            "<h1 style='display:inline-block;border-right:1px solid rgba(0, 0, 0,.3);margin:0;margin-right:20px;padding:10px 23px 10px 0;font-size:24px;font-weight:500;vertical-align:top'>404</h1>" +
+            "<div style='display:inline-block;text-align:left;line-height:49px;height:49px;vertical-align:middle'>" +
+                "<h2 style='font-size:14px;font-weight:normal;line-height:inherit;margin:0;padding:0'>This page could not be found.</h2>" +
+            "</div>" +
+        "</div>" +
+    "</div>");
 })
 
 server.listen(config.port, config.host, () => {
