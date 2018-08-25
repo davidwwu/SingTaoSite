@@ -1,5 +1,5 @@
 # Sing Tao Life Server
-visit the live site at [http://st_life.singtaola.com]
+visit the live site at http://st_life.singtaola.com
 
 This is a complete server ready to deploy on any host. The site is built with the MERN stack (i.e. MongoDB, Express.js, React.js, and Node.js).  
 This project can be separated into three main parts: Ubuntu server, Node server, and front-end React.
