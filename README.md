@@ -42,6 +42,7 @@ where location can be `top_ad`, `slider`, `aside`, `aside/left`, and `aside/righ
 ```
 /api/commertialAds/[class]
 ```
+<hr/>
 
 ### RESTful APIs for creating/reading/updating/deleting manually upload ads
 note that you'll have to login to the `/maintenance` page first.
